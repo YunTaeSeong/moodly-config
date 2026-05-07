@@ -1,0 +1,43 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: ${NAVER_MAIL_USERNAME}   # 네이버 이메일
+    password: ${NAVER_MAIL_PASSWORD}   # 패스워드 아닌 앱 비밀번호
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3311/moodly_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=utf8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+security:
+  jwt:
+    common:
+      secret: ${JWT_SECRET}
+
+auth-service:
+  base-url: http://localhost:8081

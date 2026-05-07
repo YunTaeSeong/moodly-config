@@ -1,0 +1,54 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: notification-service
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  kafka:
+    enabled: ${KAFKA_ENABLED:true}
+    consumer:
+      auto-startup: ${KAFKA_ENABLED:true} # Kafka Listener가 앱 시작할 때 자동으로 구독 시작할지 여부
+      group-id: notification-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.moodly.product.event,com.moodly.notification.event" # JsonDeserializer 허용된 패키지만 허용
+        spring.json.use.type.headers: false # Producer type header 무시하고
+        spring.json.value.default.type: "com.moodly.notification.event.InquiryEvent" # Kafka에서 JSON 들어오면 무조건 이 클래스로 변환
+
+security:
+  jwt:
+    common:
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://localhost:8082}

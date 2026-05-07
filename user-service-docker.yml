@@ -1,0 +1,46 @@
+spring:
+  data:
+    redis:
+      host: moodly-redis
+      port: 6379
+
+  mail:
+    host: smtp.naver.com
+    port: 587
+    username: ${NAVER_MAIL_USERNAME}
+    password: ${NAVER_MAIL_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+  datasource:
+    url: jdbc:mysql://moodly-user-db:3306/moodly_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=utf8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+security:
+  jwt:
+    common:
+      secret: ${JWT_SECRET}
+
+auth-service:
+  base-url: http://moodly-auth:8081
+
+coupon-service:
+  url: http://moodly-coupon:8087

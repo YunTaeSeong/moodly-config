@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb_auth;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+security:
+  jwt:
+    common:
+      secret: "bW9vZGx5LXRlc3Qtand0LXNlY3JldC0yMDI2=" # 테스트용 secret
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles
+      access-token-ttl-seconds: 900
+      refresh-token-ttl-seconds: 604800
+
+user-service:
+  url: http://localhost:8082

@@ -1,0 +1,33 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: payment-service
+  sql:
+    init:
+      mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+security:
+  jwt:
+    common:
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles
+
+order-service:
+  base-url: http://localhost:8085
+
+coupon-service:
+  base-url: http://localhost:8087
+

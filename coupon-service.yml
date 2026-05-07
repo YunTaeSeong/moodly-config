@@ -1,0 +1,22 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: "coupon-service"
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+security:
+  jwt:
+    common:
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles

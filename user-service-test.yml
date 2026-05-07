@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb_user;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: "test2@test.com"
+    password: "test1234!@#$"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+
+security:
+  jwt:
+    common:
+      secret: "bW9vZGx5LXRlc3Qtand0LXNlY3JldC0yMDI2" # 테스트용 secret
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  mail:
+    from: "test@test.com"
+  frontend:
+    base-url: http://localhost:3000
+
+auth-service:
+  base-url: http://localhost:8081
