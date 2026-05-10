@@ -34,7 +34,7 @@ management:
     health:
       show-details: always
     shutdown:
-      enabled: true
+      access: unrestricted
   info:
     env:
       enabled: true
