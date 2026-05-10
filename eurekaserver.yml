@@ -1,0 +1,16 @@
+server:
+  port: 8070
+
+spring:
+  application:
+    name: eurekaserver
+
+eureka:
+  instance:
+    hostname: moodly-eureka
+
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://moodly-eureka:8070/eureka
