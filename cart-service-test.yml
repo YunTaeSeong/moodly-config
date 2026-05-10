@@ -24,6 +24,21 @@ management:
   endpoint:
     health:
       show-details: always
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 product-service:
   base-url: http://localhost:8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+info:
+  app:
+    name: "cart-service"
+    description: "test"

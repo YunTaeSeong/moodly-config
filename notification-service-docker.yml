@@ -21,6 +21,11 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
@@ -30,3 +35,13 @@ security:
 user:
   service:
     url: ${USER_SERVICE_URL:http://moodly-user:8082}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://moodly-eureka:8070/eureka
+
+info:
+  app:
+    name: "notification-service"
+    description: "docker"

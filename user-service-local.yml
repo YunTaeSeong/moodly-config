@@ -33,6 +33,11 @@ management:
   endpoint:
     health:
       show-details: always
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
@@ -41,3 +46,13 @@ security:
 
 auth-service:
   base-url: http://localhost:8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+info:
+  app:
+    name: "user-service"
+    description: "local"

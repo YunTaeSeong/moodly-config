@@ -18,6 +18,11 @@ management:
   endpoint:
     health:
       show-details: always
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
@@ -35,3 +40,13 @@ moodly:
     toss:
       secret-key: ${TOSS_SECRET_KEY}
       base-url: https://api.tosspayments.com
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+info:
+  app:
+    name: "payment-service"
+    description: "local"

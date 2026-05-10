@@ -18,6 +18,11 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
@@ -26,3 +31,13 @@ security:
 
 cart-service:
   base-url: http://moodly-cart:8084
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://moodly-eureka:8070/eureka
+
+info:
+  app:
+    name: "order-service"
+    description: "docker"

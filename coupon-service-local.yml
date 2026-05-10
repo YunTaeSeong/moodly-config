@@ -18,8 +18,23 @@ management:
   endpoint:
     health:
       show-details: always
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
     common:
       secret: ${JWT_SECRET}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+info:
+  app:
+    name: "coupon-service"
+    description: "local"

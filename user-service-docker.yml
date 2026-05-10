@@ -33,6 +33,11 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
@@ -44,3 +49,13 @@ auth-service:
 
 coupon-service:
   url: http://moodly-coupon:8087
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://moodly-eureka:8070/eureka
+
+info:
+  app:
+    name: "user-service"
+    description: "docker"

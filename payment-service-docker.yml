@@ -18,9 +18,24 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
     common:
       secret: ${JWT_SECRET}
       base-url: https://api.tosspayments.com
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://moodly-eureka:8070/eureka
+
+info:
+  app:
+    name: "payment-service"
+    description: "docker"

@@ -31,3 +31,11 @@ order-service:
 coupon-service:
   base-url: http://localhost:8087
 
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+

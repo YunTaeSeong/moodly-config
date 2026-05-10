@@ -31,6 +31,11 @@ management:
   endpoint:
     health:
       show-details: always
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 
 security:
   jwt:
@@ -41,3 +46,13 @@ security:
       issuer: moodly-auth
       audience: moodly-api
       roles-claim: roles
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+info:
+  app:
+    name: "product-service"
+    description: "test"
