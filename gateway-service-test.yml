@@ -1,0 +1,21 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8070/eureka
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+  info:
+    env:
+      enabled: true
+
+security:
+  jwt:
+    common:
+      secret: "bW9vZGx5LXRlc3Qtand0LXNlY3JldC0yMDI2=" # 테스트용 secret
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles

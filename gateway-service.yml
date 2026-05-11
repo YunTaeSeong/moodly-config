@@ -1,0 +1,41 @@
+server:
+  port: 8072
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, gateway
+
+  endpoint:
+    gateway:
+      access: unrestricted
+
+info:
+  app:
+    name: gateway-service
+    version: 0.0.1
+
+security:
+  jwt:
+    common:
+      issuer: moodly-auth
+      audience: moodly-api
+      roles-claim: roles

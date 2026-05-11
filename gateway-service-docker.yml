@@ -1,0 +1,26 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://moodly-eurekaserver:8070/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      show-details: never
+
+    gateway:
+      access: unrestricted
+
+  info:
+    env:
+      enabled: false
+
+security:
+  jwt:
+    common:
+      secret: ${JWT_SECRET}

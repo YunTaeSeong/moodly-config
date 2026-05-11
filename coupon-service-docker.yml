@@ -32,7 +32,7 @@ security:
 eureka:
   client:
     service-url:
-      defaultZone: http://moodly-eureka:8070/eureka
+      defaultZone: http://moodly-eurekaserver:8070/eureka
 
 info:
   app:
