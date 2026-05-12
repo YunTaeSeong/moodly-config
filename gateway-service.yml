@@ -16,8 +16,152 @@ spring:
         webflux:
           discovery:
             locator:
-              enabled: true
+              enabled: false
               lower-case-service-id: true
+
+          routes:
+            # ============ AUTH ============
+            - id: AUTH-SERVICE
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/AUTH-SERVICE/**
+              filters:
+                - RewritePath=/AUTH-SERVICE/(?<segment>.*), /${segment}
+
+            # ============ USER ============
+            - id: USER-SERVICE
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/USER-SERVICE/**
+              filters:
+                - RewritePath=/USER-SERVICE/(?<segment>.*), /${segment}
+
+            # USER INTERNAL (/internal/user/**)
+            #   - InternalUserRoleController         : /internal/user
+            #   - InternalCredentialVerifyApiController : /internal/user/credential
+            - id: USER-INTERNAL
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/internal/user/**
+              filters:
+                - RewritePath=/internal/user/(?<segment>.*), /internal/${segment}
+
+            # USER INTERNAL (KAKAO OAuth 내부 호출용)
+            #   - InternalKakaoUserApiController : /internal/kakao
+            - id: USER-INTERNAL-KAKAO
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/internal/kakao/**
+              filters:
+                - RewritePath=/internal/kakao/(?<segment>.*), /internal/${segment}
+
+            # USER INTERNAL (관리자 전용 내부 API)
+            #   - InternalAdminApiController : /internal/admin
+            - id: USER-INTERNAL-ADMIN
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/internal/admin/**
+              filters:
+                - RewritePath=/internal/admin/(?<segment>.*), /internal/${segment}
+
+            # ============ PRODUCT ============
+            - id: PRODUCT-SERVICE
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/PRODUCT-SERVICE/**
+              filters:
+                - RewritePath=/PRODUCT-SERVICE/(?<segment>.*), /${segment}
+
+            # PRODUCT INTERNAL (/internal/product/**)
+            #   - InternalProductController : /internal/product
+            - id: PRODUCT-INTERNAL
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/internal/product/**
+              filters:
+                - RewritePath=/internal/product/(?<segment>.*), /internal/${segment}
+
+            # ============ CART ============
+            - id: CART-SERVICE
+              uri: lb://CART-SERVICE
+              predicates:
+                - Path=/CART-SERVICE/**
+              filters:
+                - RewritePath=/CART-SERVICE/(?<segment>.*), /${segment}
+
+            # CART INTERNAL (/internal/cart/**)
+            #   - InternalCartController : /internal/cart
+            - id: CART-INTERNAL
+              uri: lb://CART-SERVICE
+              predicates:
+                - Path=/internal/cart/**
+              filters:
+                - RewritePath=/internal/cart/(?<segment>.*), /internal/${segment}
+
+            # ============ ORDER ============
+            - id: ORDER-SERVICE
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/ORDER-SERVICE/**
+              filters:
+                - RewritePath=/ORDER-SERVICE/(?<segment>.*), /${segment}
+
+            # ORDER INTERNAL (/internal/order/**)
+            #   - InternalOrderController : /internal/order
+            - id: ORDER-INTERNAL
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/internal/order/**
+              filters:
+                - RewritePath=/internal/order/(?<segment>.*), /internal/${segment}
+
+            # ============ PAYMENT ============
+            - id: PAYMENT-SERVICE
+              uri: lb://PAYMENT-SERVICE
+              predicates:
+                - Path=/PAYMENT-SERVICE/**
+              filters:
+                - RewritePath=/PAYMENT-SERVICE/(?<segment>.*), /${segment}
+
+            # ============ NOTIFICATION ============
+            - id: NOTIFICATION-SERVICE
+              uri: lb://NOTIFICATION-SERVICE
+              predicates:
+                - Path=/NOTIFICATION-SERVICE/**
+              filters:
+                - RewritePath=/NOTIFICATION-SERVICE/(?<segment>.*), /${segment}
+
+            # ============ COUPON ============
+            - id: COUPON-SERVICE
+              uri: lb://COUPON-SERVICE
+              predicates:
+                - Path=/COUPON-SERVICE/**
+              filters:
+                - RewritePath=/COUPON-SERVICE/(?<segment>.*), /${segment}
+
+            # COUPON INTERNAL (/internal/coupon/**)
+            #   - InternalCouponController : /internal/coupon
+            - id: COUPON-INTERNAL
+              uri: lb://COUPON-SERVICE
+              predicates:
+                - Path=/internal/coupon/**
+              filters:
+                - RewritePath=/internal/coupon/(?<segment>.*), /internal/${segment}
+
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins:
+                  - "http://localhost:3000"
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - OPTIONS
+                allowed-headers: "*"
+                allow-credentials: true
 
 
 management:
@@ -41,3 +185,40 @@ security:
       issuer: moodly-auth
       audience: moodly-api
       roles-claim: roles
+    gateway:
+      user-id-header: X-User-Id
+      bearer-prefix: "Bearer "
+      roles-header: X-Roles
+      permit-all:
+        # ===== 인프라 / 헬스체크 =====
+        - /actuator/**
+
+        # ===== 서비스 간 내부 호출 (Feign, JWT 없이 호출됨) =====
+        - /internal/**
+
+        # ===== auth-service: 로그인 / 토큰 갱신 =====
+        - /AUTH-SERVICE/auth/login
+        - /AUTH-SERVICE/auth/kakao/login
+        - /AUTH-SERVICE/auth/refresh
+        - /AUTH-SERVICE/auth/logout
+
+        # ===== user-service: 회원가입 / 이메일 중복 / 아이디·비밀번호 찾기 =====
+        - /USER-SERVICE/user/register
+        - /USER-SERVICE/user/email-available
+        - /USER-SERVICE/user/find-id/**
+        - /USER-SERVICE/user/password/reset/**
+
+        # ===== product-service: 상품 / 카테고리 조회 (GET 공개) =====
+        # 주의: /PRODUCT-SERVICE/product/admin/** 은 downstream 에서
+        #       authenticated() 로 막혀있지만, gateway 에서 permit-all 로 풀면
+        #       X-User-Id 헤더가 주입되지 않아 admin 호출이 깨짐.
+        #       그래서 admin 은 일부러 제외하고, 일반/카테고리 조회 경로만 명시.
+        - /PRODUCT-SERVICE/product
+        - /PRODUCT-SERVICE/product/*
+        - /PRODUCT-SERVICE/product/list/**
+        - /PRODUCT-SERVICE/product/search/**
+        - /PRODUCT-SERVICE/product/detail/**
+        - /PRODUCT-SERVICE/category/**
+
+        # ===== notification-service: downstream 자체가 /notification/** permitAll =====
+        - /NOTIFICATION-SERVICE/notification/**
