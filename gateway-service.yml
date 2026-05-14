@@ -27,6 +27,10 @@ spring:
                 - Path=/AUTH-SERVICE/**
               filters:
                 - RewritePath=/AUTH-SERVICE/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: authCircuitBreaker
+                    fallbackUri: forward:/fallback/auth
 
             # ============ USER ============
             - id: USER-SERVICE
@@ -109,6 +113,10 @@ spring:
                 - Path=/ORDER-SERVICE/**
               filters:
                 - RewritePath=/ORDER-SERVICE/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: orderCircuitBreaker
+                    fallbackUri: forward:/fallback/order
 
             # ORDER INTERNAL (/internal/order/**)
             #   - InternalOrderController : /internal/order
@@ -126,6 +134,10 @@ spring:
                 - Path=/PAYMENT-SERVICE/**
               filters:
                 - RewritePath=/PAYMENT-SERVICE/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: paymentCircuitBreaker
+                    fallbackUri: forward:/fallback/payment
 
             # ============ NOTIFICATION ============
             - id: NOTIFICATION-SERVICE
@@ -142,6 +154,10 @@ spring:
                 - Path=/COUPON-SERVICE/**
               filters:
                 - RewritePath=/COUPON-SERVICE/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: couponCircuitBreaker
+                    fallbackUri: forward:/fallback/coupon
 
             # COUPON INTERNAL (/internal/coupon/**)
             #   - InternalCouponController : /internal/coupon
@@ -189,9 +205,9 @@ resilience4j:
       default:
         sliding-window-size: 10     # 최근 몇 개 요청 기준
         minimum-number-of-calls: 5  # 최소 요청 수
-        permitted-number-of-calls-in-half-open-state: 2 # 실패율 몇 % 넘으면 OPEN
-        failure-rate-threshold: 50  # OPEN 유지 시간
-        wait-duration-in-open-state: 10s # 복구 테스트 요청 수
+        permitted-number-of-calls-in-half-open-state: 2 # Half-Open 상태에서 허용할 테스트 호출 횟수
+        failure-rate-threshold: 50  # 실패율 임계치
+        wait-duration-in-open-state: 10s # Open 상태에서 Half-Open으로 넘어가기 전 대기 시간
 
 security:
   jwt:
