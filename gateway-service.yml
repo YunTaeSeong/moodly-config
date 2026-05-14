@@ -71,6 +71,10 @@ spring:
                 - Path=/PRODUCT-SERVICE/**
               filters:
                 - RewritePath=/PRODUCT-SERVICE/(?<segment>.*), /${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: productCircuitBreaker
+                    fallbackUri: forward:/fallback/product
 
             # PRODUCT INTERNAL (/internal/product/**)
             #   - InternalProductController : /internal/product
@@ -178,6 +182,16 @@ info:
   app:
     name: gateway-service
     version: 0.0.1
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10     # 최근 몇 개 요청 기준
+        minimum-number-of-calls: 5  # 최소 요청 수
+        permitted-number-of-calls-in-half-open-state: 2 # 실패율 몇 % 넘으면 OPEN
+        failure-rate-threshold: 50  # OPEN 유지 시간
+        wait-duration-in-open-state: 10s # 복구 테스트 요청 수
 
 security:
   jwt:
