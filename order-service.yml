@@ -13,6 +13,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 security:
   jwt:
@@ -32,3 +36,13 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10     # 최근 몇 개 요청 기준
+        minimum-number-of-calls: 5  # 최소 요청 수
+        permitted-number-of-calls-in-half-open-state: 2 # Half-Open 상태에서 허용할 테스트 호출 횟수
+        failure-rate-threshold: 50  # 실패율 임계치
+        wait-duration-in-open-state: 10s # Open 상태에서 Half-Open으로 넘어가기 전 대기 시간
