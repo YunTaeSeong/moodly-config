@@ -30,10 +30,17 @@ spring:
                 - Path=/AUTH-SERVICE/**
               filters:
                 - RewritePath=/AUTH-SERVICE/(?<segment>.*), /${segment}
+
                 - name: CircuitBreaker
                   args:
                     name: authCircuitBreaker
                     fallbackUri: forward:/fallback/auth
+
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 10
+                    redis-rate-limiter.burstCapacity: 20
+                    key-resolver: "#{@userKeyResolver}"
 
             # ============ USER ============
             - id: USER-SERVICE
