@@ -1,3 +1,11 @@
+spring:
+  data:
+    redis:
+      host: moodly-redis
+      port: 6379
+      connect-timeout: 2s
+      timeout: 1s
+
 eureka:
   client:
     service-url:
