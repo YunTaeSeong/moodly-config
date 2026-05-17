@@ -29,18 +29,18 @@ spring:
               predicates:
                 - Path=/AUTH-SERVICE/**
               filters:
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 10
+                    redis-rate-limiter.burstCapacity: 20
+                    key-resolver: "#{@userKeyResolver}"
+
                 - RewritePath=/AUTH-SERVICE/(?<segment>.*), /${segment}
 
                 - name: CircuitBreaker
                   args:
                     name: authCircuitBreaker
                     fallbackUri: forward:/fallback/auth
-
-                - name: RequestRateLimiter
-                  args:
-                    redis-rate-limiter.replenishRate: 10
-                    redis-rate-limiter.burstCapacity: 20
-                    key-resolver: "#{@userKeyResolver}"
 
             # ============ USER ============
             - id: USER-SERVICE
@@ -222,6 +222,10 @@ info:
     version: 0.0.1
 
 resilience4j:
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 15s   # Docker 기동 직후 auth/login·Feign 지연 대비 (기본 1s면 CB 오동작)
   circuitbreaker:
     configs:
       default:
