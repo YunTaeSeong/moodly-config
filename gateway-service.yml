@@ -22,6 +22,9 @@ spring:
             connect-timeout: 1000
             response-timeout: 5s
 
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Access-Control-Expose-Headers, RETAIN_FIRST
+
           routes:
             # ============ AUTH ============
             - id: AUTH-SERVICE
