@@ -7,7 +7,7 @@ spring:
 
 eureka:
   instance:
-    hostname: moodly-eureka
+    hostname: moodly-eurekaserver
 
   client:
     register-with-eureka: false
