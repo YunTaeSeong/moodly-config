@@ -7,8 +7,8 @@ spring:
 
   sql:
     init:
-      mode: always
-      data-locations: classpath:data.sql
+      # data.sql 은 ProductDataSeedRunner 가 products 비어 있을 때만 실행 (products 는 id 없이 INSERT 되어 IGNORE 불가)
+      mode: never
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
