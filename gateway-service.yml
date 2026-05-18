@@ -277,6 +277,7 @@ security:
         - /PRODUCT-SERVICE/product/list/**
         - /PRODUCT-SERVICE/product/search/**
         - /PRODUCT-SERVICE/product/detail/**
+        - /PRODUCT-SERVICE/product/review/product/**
         - /PRODUCT-SERVICE/category/**
 
         # ===== notification-service: downstream 자체가 /notification/** permitAll =====
