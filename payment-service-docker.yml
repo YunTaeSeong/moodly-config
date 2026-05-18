@@ -28,6 +28,17 @@ security:
   jwt:
     common:
       secret: ${JWT_SECRET}
+
+order-service:
+  base-url: http://moodly-order:8085
+
+coupon-service:
+  base-url: http://moodly-coupon:8087
+
+moodly:
+  payment:
+    toss:
+      secret-key: ${TOSS_SECRET_KEY}
       base-url: https://api.tosspayments.com
 
 eureka:
